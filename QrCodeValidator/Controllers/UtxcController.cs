@@ -16,6 +16,7 @@ using MimeKit.Utils;
 using QRCoder;
 using QrCodeValidator.Data;
 using QrCodeValidator.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace QrCodeValidator.Controllers
 {
@@ -50,21 +51,24 @@ namespace QrCodeValidator.Controllers
            await _context.GetUtxcs.AddAsync(utxc);
            await _context.SaveChangesAsync();
 
-
+            
             //qr code generator
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode($"https://localhost:5001/Utxc/VeryfyQr?txCode={guId}", QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             //qr code generator
+            System.IO.MemoryStream ms = new MemoryStream();
+            qrCodeImage.Save(ms, ImageFormat.Jpeg);
+            byte[] byteImage = ms.ToArray();
+            var SigBase64 = Convert.ToBase64String(byteImage);
 
-
-            var qrImage = $"<a href='https://localhost:5001/Utxc/VeryfyQr?txCode={guId}'>verify</a>";
+            var qrImageTag = $"<img src='{SigBase64}' style='width: 400px;'>";
 
             //string pathImage = Path.Combine(_environment.WebRootPath, "QrCodeImage", "qr.webp");
 
 
-            _emailSender.SendEmail(_options.Value.UserName, "ishahbaz.shaikh@gmail.com", "scan Qr code below", qrImage);
+            _emailSender.SendEmail(_options.Value.UserName, "ishahbaz.shaikh@gmail.com", "scan Qr code below", qrImageTag);
             return RedirectToAction("Index");
 
         }
