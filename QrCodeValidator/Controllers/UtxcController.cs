@@ -53,7 +53,8 @@ namespace QrCodeValidator.Controllers
            await _context.SaveChangesAsync();
 
             //url
-            var url = Url.Action("VeryfyQr", "Utxc", new { txCode = guId });
+            string scheme = HttpContext.Request.Scheme;
+            var url = Url.Action("VerifyQr", "Utxc", new { txCode = guId }, scheme);
 
             //qr code generator
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -86,7 +87,7 @@ namespace QrCodeValidator.Controllers
 
       
 
-            //_emailSender.SendEmail(_options.Value.UserName, "ishahbaz.shaikh@gmail.com", "scan Qr code below", pathImage);
+            _emailSender.SendEmail(_options.Value.UserName, "ishahbaz.shaikh@gmail.com", "scan Qr code below", $"{path}/qrCode.png");
             return RedirectToAction("Index");
 
         }
