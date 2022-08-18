@@ -52,10 +52,12 @@ namespace QrCodeValidator.Controllers
            await _context.GetUtxcs.AddAsync(utxc);
            await _context.SaveChangesAsync();
 
+            //url
+            var url = Url.Action("VeryfyQr", "Utxc", new { txCode = guId });
 
             //qr code generator
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode($"https://localhost:5001/Utxc/VeryfyQr?txCode={guId}", QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             //qr code generator
