@@ -44,27 +44,27 @@
     <script>
 
         function onScanSuccess(decodedText, decodedResult) {
-
+            html5QrcodeScanner.clear();
             $.ajax({
                 url: decodedText,
                 success: function (result) {
+                    console.log(result)
                     Swal.fire(
                         'Success!',
-                        'verified successfully!',
+                        result.message,
                         'success'
                     )
                 },
                 error: function (error) {
+                    console.log(error)
                     Swal.fire({
                         icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
+                        title: 'Invalid',
+                        text: 'Please requiest new Qr code!',
                     })
-
+                    html5QrcodeScanner.render(onScanSuccess);
                 }
             })
-
-            html5QrcodeScanner.clear();
 
         }
 

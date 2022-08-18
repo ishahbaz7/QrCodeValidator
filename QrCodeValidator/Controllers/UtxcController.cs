@@ -87,14 +87,26 @@ namespace QrCodeValidator.Controllers
 
         public IActionResult VerifyQr(string txCode)
         {
+            var message = "";
             if (!string.IsNullOrEmpty(txCode))
             {
-                _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault().IsConfirmed = true;
-                _context.SaveChangesAsync();
-                return Json("Ok");
+                var utxc = _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault();
+                if(!utxc.IsConfirmed) {
+                    utxc.IsConfirmed = true;
+                    _context.SaveChangesAsync();
+                    message = "verified successfully!";
+                    return Json(new { message });
+                }
+                else
+                {
+                    message = "Already verified!";
+                    return Json(new { message });
+                }
+                
             }
+            message = "Please request new Qr code!";
             HttpContext.Response.StatusCode = 404;
-            return Json("error");
+            return Json(new { message });
             
         }
 
