@@ -3,7 +3,7 @@ namespace FinApp.Services
 {
 	public interface IEmailSender
 	{
-		void SendEmail(string fromAddress, string toAddress, string subject, string path);
+		void SendEmail(string fromAddress, string toAddress, string subject, string path, string Text="");
 
 	}
 }

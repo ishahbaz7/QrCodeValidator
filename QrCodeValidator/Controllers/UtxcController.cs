@@ -75,28 +75,27 @@ namespace QrCodeValidator.Controllers
                 qrCodeImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
             }
 
+            _emailSender.SendEmail(
+                _options.Value.UserName,
+                "ishahbaz.shaikh@gmail.com",
+                "scan Qr code below",
+                $"{path}/qrCode.png");
 
-            //System.IO.MemoryStream ms = new MemoryStream();
-            //qrCodeImage.Save(ms, ImageFormat.Jpeg);
-            //byte[] byteImage = ms.ToArray();
-            //var SigBase64 = Convert.ToBase64String(byteImage);
-
-
-
-            //var qrImageTag = $"<img src='{SigBase64}' style='width:400px;'/>";
-
-      
-
-            _emailSender.SendEmail(_options.Value.UserName, "ishahbaz.shaikh@gmail.com", "scan Qr code below", $"{path}/qrCode.png");
             return RedirectToAction("Index");
 
         }
 
         public IActionResult VerifyQr(string txCode)
         {
-            _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault().IsConfirmed = true;
-            _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            if (!string.IsNullOrEmpty(txCode))
+            {
+                _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault().IsConfirmed = true;
+                _context.SaveChangesAsync();
+                return Json("Ok");
+            }
+            HttpContext.Response.StatusCode = 404;
+            return Json("error");
+            
         }
 
 

@@ -19,7 +19,7 @@ namespace FinApp.Services
             _options = options;
         }
 
-        public void SendEmail(string fromAddress, string toAddress, string subject, string path)
+        public void SendEmail(string fromAddress, string toAddress, string subject, string path, string Text="")
         {
      
 
@@ -32,15 +32,7 @@ namespace FinApp.Services
             // create our message text, just like before (except don't set it as the message.Body)
             var body = new TextPart("plain")
             {
-                Text = @"Hey Alice,
-
-                    What are you up to this weekend? Monica is throwing one of her parties on
-                    Saturday. I was hoping you could make it.
-
-                    Will you be my +1?
-
-                    -- Joey
-                    "
+                Text = Text
             };
             // create an image attachment for the file located at path
             var attachment = new MimePart("image", "gif")

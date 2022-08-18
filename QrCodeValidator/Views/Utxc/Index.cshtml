@@ -1,15 +1,76 @@
 ﻿<div class="container">
-        <div class="jumbotron mt-3">
-            <h1>Send Qr code and validate</h1>
-            <a class="btn btn-lg btn-primary" href="/Utxc/SendQrCode" role="button">Send Qr Code</a>
-        </div>
-        <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png' style='width: 400px;'>
+    <div class="jumbotron mt-3">
+        <h1>Send Qr code and validate</h1>
+        <a class="btn btn-primary" href="/Utxc/SendQrCode" role="button">Send Qr Code</a>
     </div>
 
+    <div style="width: 500px; margin:0 auto;" id="reader"></div>
 
+
+</div>
+
+@section Styles{ 
+    <style>
+        #reader img{
+            display:none;
+        }
+
+        #reader button {
+            color: #fff;
+            background-color: #1b6ec2;
+            border-color: #1861ac;
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+        }
+            #reader button:hover {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+    </style>
+
+}
 @section Scripts{
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>*@
+    <script src="/js/qrcode.js"></script>
+    <script src="/js/sweetAlert2.js"></script>
+
     <script>
+
+        function onScanSuccess(decodedText, decodedResult) {
+
+            $.ajax({
+                url: decodedText,
+                success: function (result) {
+                    Swal.fire(
+                        'Success!',
+                        'verified successfully!',
+                        'success'
+                    )
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    })
+
+                }
+            })
+
+            html5QrcodeScanner.clear();
+
+        }
+
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess);
 
     </script>
 
