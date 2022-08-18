@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
     <PackageReference Include="MailKit" Version="3.3.0" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,7 @@
     <None Remove="MozJpegSharp.GdiPlus" />
     <None Remove="BarCode" />
     <None Remove="MailKit" />
+    <None Remove="SixLabors.ImageSharp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
