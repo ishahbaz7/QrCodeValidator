@@ -4,8 +4,12 @@
         <a class="btn btn-primary" href="/Utxc/SendQrCode" role="button">Send Qr Code</a>
     </div>
 
-    <div style="width: 500px; margin:0 auto;" id="reader"></div>
-
+    <div id="readerBox">
+        <div class="spinner-border d-none" style=" position: relative; left: 50%;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div style="width: 500px; margin:0 auto;" id="reader"></div>
+    </div>
 
 </div>
 
@@ -44,7 +48,8 @@
     <script>
 
         function onScanSuccess(decodedText, decodedResult) {
-            html5QrcodeScanner.clear();
+            stopScanner();
+            $(".spinner-border").removeClass("d-none")
             $.ajax({
                 url: decodedText,
                 success: function (result) {
@@ -54,15 +59,16 @@
                         result.message,
                         'success'
                     )
+                    $(".spinner-border").addClass("d-none")                    
                 },
                 error: function (error) {
                     console.log(error)
                     Swal.fire({
                         icon: 'error',
                         title: 'Invalid',
-                        text: 'Please requiest new Qr code!',
+                        text: 'Please request new Qr code!',
                     })
-                    html5QrcodeScanner.render(onScanSuccess);
+                    $(".spinner-border").addClass("d-none")
                 }
             })
 
@@ -71,6 +77,26 @@
         var html5QrcodeScanner = new Html5QrcodeScanner(
             "reader", { fps: 10, qrbox: 250 });
         html5QrcodeScanner.render(onScanSuccess);
+
+        var stopScanner = () => {
+            var button = $("#reader__dashboard_section_csr>span>button")[1];
+            $(button).attr("style") == 'display: inline-block;' && $(button).click();
+            console.log(button)
+        }
+
+        $(document).ready(() => {
+
+            let interval = setInterval(() => {
+                var button = $("#reader__dashboard_section_csr>span>button")[1];
+                if (button != undefined) {
+                    setTimeout(() => stopScanner(), 300)
+                    clearInterval(interval);
+                }
+            }, 100)
+
+        })
+
+   
 
     </script>
 

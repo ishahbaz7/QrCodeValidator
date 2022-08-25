@@ -88,9 +88,10 @@ namespace QrCodeValidator.Controllers
         public IActionResult VerifyQr(string txCode)
         {
             var message = "";
-            if (!string.IsNullOrEmpty(txCode))
+            var utxc = _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault();
+            if (!string.IsNullOrEmpty(txCode) && utxc != null)
             {
-                var utxc = _context.GetUtxcs.Where(x => x.TxCode == txCode).FirstOrDefault();
+                
                 if(!utxc.IsConfirmed) {
                     utxc.IsConfirmed = true;
                     _context.SaveChangesAsync();
